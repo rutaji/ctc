@@ -6,10 +6,13 @@ import (
 	"time"
 )
 
+var ch chan int
+
 type car struct {
 	id         int
 	fuel       int
 	isTankFull bool
+	isPayed    bool
 }
 type pump struct {
 	fuel          int
@@ -22,16 +25,32 @@ type carFactory struct {
 	carId int
 }
 type gasStation struct {
-	pumps []*pump
+	pumps    []*pump
+	cashiers []*cashier
+}
+type cashier struct {
+	payingCar *car
+	minTime   int
+	maxTime   int
+}
+
+func (cashier *cashier) mainLoop() {
+	if cashier.payingCar != nil {
+		var randTime = rand.Intn(pump.maxTime-pump.minTime) + pump.minTime
+		time.Sleep(randTime)
+		cashier.payingCar.isPayed = true
+		fmt.Printf("car %d paid the price", pump.line[0].id)
+		cashier.payingCar = nil
+	}
 
 }
-type 
 
 func (carFactory *carFactory) getCar() car {
 	var car car
 	car.id = carFactory.getId()
 	car.fuel = rand.Intn(numberOfFuel)
 	car.isTankFull = false
+	car.isPayed = false
 	return car
 }
 func (carFactory *carFactory) getId() int {
@@ -48,14 +67,25 @@ func (pump *pump) serve() {
 	var randTime = rand.Intn(pump.maxTime-pump.minTime) + pump.minTime
 	time.Sleep(time.Duration(randTime) * time.Millisecond)
 }
-func (pump *pump) mainLoop() {
+func (pump *pump) mainLoop(gasStation *gasStation) {
 	for {
-		if !pump.line[0].isTankFull {
-			pump.serve()
-			pump.line[0].isTankFull = true
-			fmt.Printf("car %d is full", pump.line[0].id)
+		if pump.line[0].isPayed {
+
 		}
-		//waiting for payment
+		else{
+			if !pump.line[0].isTankFull {
+				pump.serve()
+				pump.line[0].isTankFull = true
+				fmt.Printf("car %d is full", pump.line[0].id)
+			}
+			//waiting for payment
+			for _, element := range gasStation.cashiers {
+				if element.payingCar == nil {
+					element.payingCar = pump.line[0]
+					break
+				}
+			}
+		}
 	}
 }
 func (pump *pump) addCar() {}
@@ -79,7 +109,6 @@ const (
 )
 
 func main() {
-
 	var factory carFactory
 	var gaspump = CreatePump(gas, 10, 50, 70)
 	var testcar = factory.getCar()
