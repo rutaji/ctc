@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"runtime"
 )
 
 func main() {
+	runtime.GOMAXPROCS(3)
+	fmt.Println("start")
 	var factory carFactory
 	var gasStation gasStation
 	gasStation.pumps = append(gasStation.pumps, CreatePump(gas, 10, 50, 70))
@@ -13,14 +16,13 @@ func main() {
 	gasStation.pumps = append(gasStation.pumps, CreatePump(electric, 10, 10, 40))
 	gasStation.cashiers = append(gasStation.cashiers, CreateCashier(5, 10, 20))
 	gasStation.Open()
-	var numberOfCars = 6
+	var numberOfCars = 60
 	for i := 0; i < numberOfCars; i++ {
 		var car = factory.getCar()
-		car.fuel = gas
 		for {
 			var bestPump = gasStation.GetBestPump(car.fuel)
 			if bestPump == nil {
-				fmt.Printf("no pump for %s ,leaving \n", car.fuel)
+				fmt.Printf("no pump for %d ,leaving \n", car.fuel)
 				break
 			}
 			if bestPump.canGetInLine(&car) {

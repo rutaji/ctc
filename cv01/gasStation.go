@@ -17,6 +17,16 @@ func (gasStation *gasStation) GetBestPump(fuel int) *Pump {
 	}
 	return bestPump
 }
+func (gasStation *gasStation) GetBestCashier() *Cashier {
+	var bestCashier *Cashier
+	for _, cashier := range gasStation.cashiers {
+		if bestCashier == nil || len(cashier.line) < len(bestCashier.line) {
+			bestCashier = cashier
+		}
+	}
+	return bestCashier
+}
+
 func (gasStation *gasStation) Open() {
 	for _, pump := range gasStation.pumps {
 		go pump.mainLoop(gasStation)
