@@ -1,8 +1,8 @@
 package main
 
 type gasStation struct {
-	pumps    []*Pump
-	cashiers []*Cashier
+	pumps    []*Pump    `json:"pumps"`
+	cashiers []*Cashier `json:"cashiers"`
 }
 
 func (gasStation *gasStation) GetBestPump(fuel int) *Pump {
@@ -29,9 +29,11 @@ func (gasStation *gasStation) GetBestCashier() *Cashier {
 
 func (gasStation *gasStation) Open() {
 	for _, pump := range gasStation.pumps {
+		pump.CreatePump()
 		go pump.mainLoop(gasStation)
 	}
 	for _, cashier := range gasStation.cashiers {
+		cashier.CreateCashier()
 		go cashier.mainLoop()
 	}
 }

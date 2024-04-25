@@ -8,12 +8,12 @@ import (
 )
 
 type Pump struct {
-	fuel      int
+	fuel      int `json:"fuel"`
 	line      []*car
-	minTime   int
-	maxTime   int
+	minTime   int `json:"min_time"`
+	maxTime   int `json:"max_time"`
 	mu        sync.Mutex
-	maxInLine int
+	maxInLine int `json:"max_in_line"`
 
 	totalTimeinLine int64
 	totalcars       int
@@ -63,12 +63,6 @@ func (pump *Pump) addCar(car *car) {
 	pump.line = append(pump.line, car)
 	pump.mu.Unlock()
 }
-func CreatePump(fuel int, maxCarsInLine int, minTime int, maxTime int) *Pump {
-	p := new(Pump)
-	p.fuel = fuel
+func (p *Pump) CreatePump() {
 	p.line = make([]*car, 0)
-	p.maxTime = maxTime
-	p.minTime = minTime
-	p.maxInLine = maxCarsInLine
-	return p
 }

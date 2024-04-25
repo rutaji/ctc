@@ -9,10 +9,10 @@ import (
 
 type Cashier struct {
 	line      []*car
-	minTime   int
-	maxTime   int
+	minTime   int `json:"min_time"`
+	maxTime   int `json:"max_time"`
 	mu        sync.Mutex
-	maxInLine int
+	maxInLine int `json:"max_in_line"`
 
 	timeInLineTotal int64
 	totalcars       int
@@ -57,12 +57,6 @@ func (cashier *Cashier) AddToLine(car *car) bool {
 	return true
 }
 
-func CreateCashier(maxCarsInLine int, minTime int, maxTime int) *Cashier {
-	c := new(Cashier)
+func (c *Cashier) CreateCashier() {
 	c.line = make([]*car, 0)
-	c.minTime = minTime
-	c.maxTime = maxTime
-	c.maxInLine = maxCarsInLine
-	return c
-
 }

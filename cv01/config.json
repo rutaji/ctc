@@ -1,0 +1,23 @@
+{
+
+  "gas_station": {
+    "pumps": [
+      {
+        "fuel": 1,
+        "min_time": 30,
+        "max_time": 110,
+        "max_in_line": 6
+
+      }
+    ],
+    "cashiers": [
+      {
+        "min_time": 40,
+        "max_time": 70,
+        "max_in_line": 5
+
+      }
+    ]
+  },
+  "number_of_cars": 60
+}
