@@ -14,11 +14,14 @@ type Pump struct {
 	maxTime   int
 	mu        sync.Mutex
 	maxInLine int
+
+	totalTimeinLine int64
+	totalcars       int
 }
 
-func (carFactory *carFactory) getId() int {
-	carFactory.carId += 1
-	return carFactory.carId
+func (pump *Pump) Print() {
+	fmt.Printf("Pump fuel: %s\n	total time in line: %d s\n	total cars: %d \n	avg. time in line %d ms\n",
+		GetFuelName(pump.fuel), pump.totalTimeinLine/1000, pump.totalcars, pump.totalTimeinLine/int64(pump.totalcars))
 }
 
 func (pump *Pump) canGetInLine(car *car) bool {
@@ -35,14 +38,18 @@ func (pump *Pump) mainLoop(gasStation *gasStation) {
 		}
 		switch pump.line[0].state {
 		case paid:
-			fmt.Printf("car %d fuel: %d left \n", pump.line[0].id, pump.line[0].fuel)
+			fmt.Printf("car %d fuel: %s left \n", pump.line[0].id, GetFuelName(pump.line[0].fuel))
+			GetStatManager().CarLeft(pump.line[0].timeCreated)
+			pump.totalcars++
 			pump.mu.Lock()
 			pump.line = pump.line[1:]
 			pump.mu.Unlock()
 		case refueling:
+			pump.totalTimeinLine += time.Now().UnixMilli() - pump.line[0].pumpArrived
 			pump.serve()
 			pump.line[0].state = lookingForCashier
-			fmt.Printf("car %d fuel: %d refilled  \n", pump.line[0].id, pump.line[0].fuel)
+			fmt.Printf("car %d fuel: %s refilled  \n", pump.line[0].id, GetFuelName(pump.line[0].fuel))
+			pump.line[0].cashierArrived = time.Now().UnixMilli()
 		case lookingForCashier:
 			gasStation.GetBestCashier().AddToLine(pump.line[0])
 		default:
@@ -50,6 +57,7 @@ func (pump *Pump) mainLoop(gasStation *gasStation) {
 		}
 	}
 }
+
 func (pump *Pump) addCar(car *car) {
 	pump.mu.Lock()
 	pump.line = append(pump.line, car)

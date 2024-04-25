@@ -43,3 +43,11 @@ func (gasStation *gasStation) EveryOneIsGone() bool {
 	}
 	return true
 }
+func (gasStation *gasStation) Print() {
+	for _, pump := range gasStation.pumps {
+		pump.Print()
+	}
+	for _, cashier := range gasStation.cashiers {
+		cashier.Print()
+	}
+}

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"runtime"
+	"time"
 )
 
 func main() {
@@ -26,6 +27,7 @@ func main() {
 				break
 			}
 			if bestPump.canGetInLine(&car) {
+				car.pumpArrived = time.Now().UnixMilli()
 				bestPump.addCar(&car)
 				break
 			}
@@ -38,6 +40,8 @@ func main() {
 			break
 		}
 	}
-	fmt.Println("END")
+	fmt.Println("----------------------STATS-----------------------")
+	GetStatManager().Print(factory.getNumberOfCars())
+	gasStation.Print()
 
 }

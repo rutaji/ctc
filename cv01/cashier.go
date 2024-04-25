@@ -13,6 +13,14 @@ type Cashier struct {
 	maxTime   int
 	mu        sync.Mutex
 	maxInLine int
+
+	timeInLineTotal int64
+	totalcars       int
+}
+
+func (cashier *Cashier) Print() {
+	fmt.Printf("Cashier\n	total time in line: %d s\n	total cars: %d \n	avg. time in line %d ms\n",
+		cashier.timeInLineTotal/1000, cashier.totalcars, cashier.timeInLineTotal/int64(cashier.totalcars))
 }
 
 func (cashier *Cashier) mainLoop() {
@@ -20,8 +28,10 @@ func (cashier *Cashier) mainLoop() {
 		if len(cashier.line) != 0 {
 			var randTime = rand.Intn(cashier.maxTime-cashier.minTime) + cashier.minTime
 			time.Sleep(time.Duration(randTime) * time.Millisecond)
-			fmt.Printf("car %d fuel: %d  paid the price \n", cashier.line[0].id, cashier.line[0].fuel)
+			fmt.Printf("car %d fuel: %s paid the price \n", cashier.line[0].id, GetFuelName(cashier.line[0].fuel))
 			cashier.line[0].state = paid
+			cashier.timeInLineTotal += time.Now().UnixMilli() - cashier.line[0].cashierArrived
+			cashier.totalcars++
 			cashier.MoveInLine()
 		}
 	}
