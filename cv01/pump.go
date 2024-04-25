@@ -8,12 +8,12 @@ import (
 )
 
 type Pump struct {
-	fuel      int `json:"fuel"`
+	Fuel      int `json:"fuel"`
 	line      []*car
-	minTime   int `json:"min_time"`
-	maxTime   int `json:"max_time"`
+	MinTime   int `json:"min_time"`
+	MaxTime   int `json:"max_time"`
 	mu        sync.Mutex
-	maxInLine int `json:"max_in_line"`
+	MaxInLine int `json:"max_in_line"`
 
 	totalTimeinLine int64
 	totalcars       int
@@ -21,14 +21,14 @@ type Pump struct {
 
 func (pump *Pump) Print() {
 	fmt.Printf("Pump fuel: %s\n	total time in line: %d s\n	total cars: %d \n	avg. time in line %d ms\n",
-		GetFuelName(pump.fuel), pump.totalTimeinLine/1000, pump.totalcars, pump.totalTimeinLine/int64(pump.totalcars))
+		GetFuelName(pump.Fuel), pump.totalTimeinLine/1000, pump.totalcars, pump.totalTimeinLine/int64(pump.totalcars))
 }
 
 func (pump *Pump) canGetInLine(car *car) bool {
-	return pump.fuel == car.fuel && len(pump.line) <= pump.maxInLine
+	return pump.Fuel == car.fuel && len(pump.line) <= pump.MaxInLine
 }
 func (pump *Pump) serve() {
-	var randTime = rand.Intn(pump.maxTime-pump.minTime) + pump.minTime
+	var randTime = rand.Intn(pump.MaxTime-pump.MinTime) + pump.MinTime
 	time.Sleep(time.Duration(randTime) * time.Millisecond)
 }
 func (pump *Pump) mainLoop(gasStation *gasStation) {

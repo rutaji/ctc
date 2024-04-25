@@ -1,14 +1,14 @@
 package main
 
 type gasStation struct {
-	pumps    []*Pump    `json:"pumps"`
-	cashiers []*Cashier `json:"cashiers"`
+	Pumps    []*Pump    `json:"pumps"`
+	Cashiers []*Cashier `json:"cashiers"`
 }
 
 func (gasStation *gasStation) GetBestPump(fuel int) *Pump {
 	var bestPump *Pump
-	for _, pump := range gasStation.pumps {
-		if pump.fuel != fuel {
+	for _, pump := range gasStation.Pumps {
+		if pump.Fuel != fuel {
 			continue
 		}
 		if bestPump == nil || len(pump.line) < len(bestPump.line) {
@@ -19,7 +19,7 @@ func (gasStation *gasStation) GetBestPump(fuel int) *Pump {
 }
 func (gasStation *gasStation) GetBestCashier() *Cashier {
 	var bestCashier *Cashier
-	for _, cashier := range gasStation.cashiers {
+	for _, cashier := range gasStation.Cashiers {
 		if bestCashier == nil || len(cashier.line) < len(bestCashier.line) {
 			bestCashier = cashier
 		}
@@ -28,17 +28,17 @@ func (gasStation *gasStation) GetBestCashier() *Cashier {
 }
 
 func (gasStation *gasStation) Open() {
-	for _, pump := range gasStation.pumps {
+	for _, pump := range gasStation.Pumps {
 		pump.CreatePump()
 		go pump.mainLoop(gasStation)
 	}
-	for _, cashier := range gasStation.cashiers {
+	for _, cashier := range gasStation.Cashiers {
 		cashier.CreateCashier()
 		go cashier.mainLoop()
 	}
 }
 func (gasStation *gasStation) EveryOneIsGone() bool {
-	for _, pump := range gasStation.pumps {
+	for _, pump := range gasStation.Pumps {
 		if len(pump.line) != 0 {
 			return false
 		}
@@ -46,10 +46,10 @@ func (gasStation *gasStation) EveryOneIsGone() bool {
 	return true
 }
 func (gasStation *gasStation) Print() {
-	for _, pump := range gasStation.pumps {
+	for _, pump := range gasStation.Pumps {
 		pump.Print()
 	}
-	for _, cashier := range gasStation.cashiers {
+	for _, cashier := range gasStation.Cashiers {
 		cashier.Print()
 	}
 }

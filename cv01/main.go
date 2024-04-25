@@ -25,15 +25,12 @@ func main() {
 	if er != nil {
 		fmt.Println(er)
 	}
-	json.Unmarshal(bytes, &config)
-	var numberOfCars = config.numberOfCars
-	gasStation = config.gasStation
-
-	/*gasStation.pumps = append(gasStation.pumps, CreatePump(diesel, 10, 10, 40))
-	gasStation.pumps = append(gasStation.pumps, CreatePump(LPG, 10, 10, 40))
-	gasStation.pumps = append(gasStation.pumps, CreatePump(electric, 10, 10, 40))
-	gasStation.cashiers = append(gasStation.cashiers, CreateCashier(5, 10, 20))*/
-
+	var errr = json.Unmarshal(bytes, &config)
+	if errr != nil {
+		fmt.Println(errr)
+	}
+	var numberOfCars = config.NumberOfCars
+	gasStation = config.GasStation
 	gasStation.Open()
 
 	for i := 0; i < numberOfCars; i++ {
@@ -49,9 +46,7 @@ func main() {
 				bestPump.addCar(&car)
 				break
 			}
-
 		}
-
 	}
 	for {
 		if gasStation.EveryOneIsGone() {

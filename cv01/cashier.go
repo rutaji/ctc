@@ -9,10 +9,10 @@ import (
 
 type Cashier struct {
 	line      []*car
-	minTime   int `json:"min_time"`
-	maxTime   int `json:"max_time"`
+	MinTime   int `json:"min_time"`
+	MaxTime   int `json:"max_time"`
 	mu        sync.Mutex
-	maxInLine int `json:"max_in_line"`
+	MaxInLine int `json:"max_in_line"`
 
 	timeInLineTotal int64
 	totalcars       int
@@ -26,7 +26,7 @@ func (cashier *Cashier) Print() {
 func (cashier *Cashier) mainLoop() {
 	for {
 		if len(cashier.line) != 0 {
-			var randTime = rand.Intn(cashier.maxTime-cashier.minTime) + cashier.minTime
+			var randTime = rand.Intn(cashier.MaxTime-cashier.MinTime) + cashier.MinTime
 			time.Sleep(time.Duration(randTime) * time.Millisecond)
 			fmt.Printf("car %d fuel: %s paid the price \n", cashier.line[0].id, GetFuelName(cashier.line[0].fuel))
 			cashier.line[0].state = paid
@@ -38,7 +38,7 @@ func (cashier *Cashier) mainLoop() {
 
 }
 func (cashier *Cashier) CanAdd() bool {
-	return len(cashier.line) < cashier.maxInLine
+	return len(cashier.line) < cashier.MaxInLine
 }
 func (cashier *Cashier) MoveInLine() {
 	cashier.mu.Lock()

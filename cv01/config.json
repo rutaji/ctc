@@ -8,6 +8,27 @@
         "max_time": 110,
         "max_in_line": 6
 
+      },
+      {
+        "fuel": 2,
+        "min_time": 50,
+        "max_time": 110,
+        "max_in_line": 6
+
+      },
+      {
+        "fuel": 3,
+        "min_time": 30,
+        "max_time": 210,
+        "max_in_line": 9
+
+      },
+      {
+        "fuel": 0,
+        "min_time": 20,
+        "max_time": 45,
+        "max_in_line": 6
+
       }
     ],
     "cashiers": [
@@ -16,8 +37,14 @@
         "max_time": 70,
         "max_in_line": 5
 
+      },
+      {
+        "min_time": 60,
+        "max_time": 91,
+        "max_in_line": 7
+
       }
     ]
   },
-  "number_of_cars": 60
+  "number_of_cars": 250
 }
